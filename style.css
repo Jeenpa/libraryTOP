@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-areas: 
+    "sidebar main main main"
+    "sidebar main main main"
+    "sidebar main main main"
+    "footer footer footer footer";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 3fr 3fr 3fr 0.6fr;
+}
+
+button {
+    cursor: pointer;
+}
+
+.sidebar {
+    max-height: 100vh;
+    background-color: lightblue;
+    grid-area: sidebar;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+}
+
+.sidebar .logo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar h1 {
+    font-family: "Courgette", cursive;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+}
+
+.sidebar img {
+    width: 90px;
+    height: auto;
+}
+
+.main {
+    grid-area: main;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+#modal {
+    background-color: #e4e7e8;
+}
+
+#modal::backdrop {
+    background-color: rgba(0, 0, 0, .55);
+}
+
+.headerModal {
+    display: flex;
+    justify-content: space-between;
+}
+
+#closeModal {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+#modal #form-book {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal #form-book input {
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+#modal #form-book input[type="number"]{
+    width: 60px;
+}
+
+#modal .container-read {
+    display: flex;
+    margin: 10px 0px;
+    align-items: center;
+    gap: 10px;
+}
+
+#modal .container-read #read {
+    margin: auto 0px;
+}
+
+#modal .buttons {
+    margin: 10px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#modal #form-book input[type="submit"],
+#modal #form-book input[type="reset"]{
+    min-width: 100px;
+    padding: 5px;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+}
+
+#modal #form-book input[type="submit"]{
+    background-color: green;
+}
+
+#modal #form-book input[type="reset"]{
+    background-color: red;
+}
+
+.main .card {
+    flex: 0 1 200px;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #e4e7e8;
+    padding: 0px 15px;
+    margin: 5px;
+    border-radius: 10px;
+    border-left: 5px solid #66b3eb;
+}
+
+.card-title {
+    margin: 0px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-read {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-read img {
+    width: 30px;
+    height: auto;
+    margin-left: 10px;
+}
+
+.footer {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-area: footer;
+    color: #fff;
+    position: sticky;
+    bottom: 0;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+            <div class="logo">
+                <img src="images/biblioteca-en-linea.png" alt="logo biblioteca">
+                <h1>La biblioteca virtual</h1>
+            </div>
+            <div class="buttons">
+                <button id="newBook">Agregar</button>
+                <button id="clear">Vaciar</button>
+            </div>
+    </aside>
+
+    <dialog id="modal">
+        <div class="headerModal">
+            <h2>Datos del libro</h2> 
+            <button id="closeModal">X</button>
+        </div>
+        <form id="form-book" action="" method="dialog">
+            <label for="title">Titulo:</label>
+            <input type="text" name="title" id="title" placeholder="Escribe aqui el titulo del libro" required>
+            <label for="author">Autor:</label>
+            <input type="text" name="author" id="author" placeholder="Ingresa el nombre del autor" required>
+            <label for="pages">Paginas:</label>
+            <input type="number" name="pages" id="pages" placeholder="N° Paginas" required>
+            <div class="container-read">
+                <label for="read">Leído:</label>
+                <label for="radio1"><input id="radio1" type="radio" name="read"> Si</label>
+                <label for="radio2"><input id="radio2" type="radio" name="read"> No</label>
+
+            </div>
+            <div class="buttons">
+                <input id="submit" type="submit" value="Confirmar">
+                <input type="reset" value="Limpiar">
+            </div>
+        </form>
+    </dialog>
+
+    <main id="main" class="main">
+        
+    </main>
+    <footer class="footer">
+        <p>Desarrollado por Jeenpa</p>
+    </footer>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
