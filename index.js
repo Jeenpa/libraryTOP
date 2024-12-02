@@ -1,155 +1,140 @@
-const d = document;
-let myLibrary = [];
-const $modal = d.querySelector("#modal");
-const $container = d.getElementById("main");
-
-// Se escucha en evento click en todo el document para luego delegar dichos eventos.
-d.addEventListener("click", (e)=>{
-    console.log(e.target);
-
-    if (e.target.matches("#newBook")) {
-        $modal.showModal();
+class Book {
+    constructor(id, title, author, pages, read) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
     }
 
-    if (e.target.matches("#btn-cerrar-modal")) {
-        $modal.close();
+    info() {
+        return `${this.title} by ${this.author}, ${this.pages}, ${this.read}`;
+    }
+}
+
+class Library {
+    constructor() {
+        this.myLibrary = [];
+        this.$modal = document.querySelector("#modal");
+        this.$container = document.getElementById("main");
+        this.init();
     }
 
-    if (e.target.matches("#clear")) {
-        $container.innerHTML = "";
+    init() {
+        this.addEventListeners();
+        this.loadInitialBooks();
+        this.renderBooks();
     }
 
-    if (e.target.matches("#closeModal")) {
-        $modal.close();
+    addEventListeners() {
+        document.addEventListener("click", (e) => {
+            if (e.target.matches("#newBook")) {
+                this.$modal.showModal();
+            }
+
+            if (e.target.matches("#btn-cerrar-modal") || e.target.matches("#closeModal")) {
+                this.$modal.close();
+            }
+
+            if (e.target.matches("#clear")) {
+                this.$container.innerHTML = "";
+            }
+
+            if (e.target.matches("#submit")) {
+                e.preventDefault();
+                this.handleSubmit();
+            }
+
+            if (e.target.matches(".delete")) {
+                this.handleDelete(e.target.id);
+            }
+
+            if (e.target.matches(".change")) {
+                this.handleChange(e.target.id);
+            }
+        });
     }
 
-    if (e.target.matches("#submit")) {
-        e.preventDefault();
-        let $title_form = d.querySelector("#title").value,
-         $author_form = d.querySelector("#author").value,
-         $pages_form = d.querySelector("#pages").value,
-         id = new Date().getTime(),
-         read;
-        ;
+    loadInitialBooks() {
+        this.addBookToLibrary(new Book(1, "El alquimista", "Paulo Coelho", 192, true));
+        this.addBookToLibrary(new Book(2, "El hombre que calculaba", "Malba Tahan", 288, true));
+        this.addBookToLibrary(new Book(3, "Piense y hagase rico", "Napoleon Hill", 320, false));
+        this.addBookToLibrary(new Book(4, "Metafisica 4 en 1", "Conny Mendez", 314, true));
+    }
 
-        if (d.getElementById("radio1").checked) {
-            read = true;
-        }
+    addBookToLibrary(book) {
+        this.myLibrary.push(book);
+    }
 
-        if (d.getElementById("radio2").checked) {
-            read = false;
-        }
+    handleSubmit() {
+        const title = document.querySelector("#title").value;
+        const author = document.querySelector("#author").value;
+        const pages = document.querySelector("#pages").value;
+        const id = new Date().getTime();
+        const read = document.getElementById("radio1").checked;
 
-
-        if ($title_form && $author_form && $pages_form && read) {
-            //Llama la funcion constructora de libros
-            addBookToLibrary(new Book(id, $title_form, $author_form, $pages_form, read));
-            //limpia la pantalla
-            $container.innerHTML = "";
-            //llama la funcion que carga las card en pantalla a partir del arreglo que contiene los libros
-            onloadCards();
-            d.querySelector("#title").value = "";
-            d.querySelector("#author").value = "";
-            d.querySelector("#pages").value = "";
-            d.querySelector("#radio1").checked = false;
-            d.querySelector("#radio2").checked = false;
-
-            $modal.close();
-        } else  {
+        if (title && author && pages && (read || document.getElementById("radio2").checked)) {
+            this.addBookToLibrary(new Book(id, title, author, pages, read));
+            this.clearForm();
+            this.renderBooks();
+            this.$modal.close();
+        } else {
             alert("Completa todos los campos");
         }
-
     }
 
-    if (e.target.matches(".delete")) {
-        const txtOrigin = e.target.id;
-        const regex = /[^0-9]/g; // Expresión regular para eliminar letras
-        const txtFilter = txtOrigin.replace(regex, "");
-
-        let id = parseInt(txtFilter);
-        deleteCard(id);
-        $container.innerHTML = "";
-        onloadCards();
+    clearForm() {
+        document.querySelector("#title").value = "";
+        document.querySelector("#author").value = "";
+        document.querySelector("#pages").value = "";
+        document.querySelector("#radio1").checked = false;
+        document.querySelector("#radio2").checked = false;
     }
 
-    if (e.target.matches(".change")) {
-        const txtOrigin = e.target.id;
-        const regex = /[^0-9]/g; // Expresión regular para eliminar letras
-        const txtFilter = txtOrigin.replace(regex, "");
-
-        let id = parseInt(txtFilter);
-        changeCard(id);
-        $container.innerHTML = "";
-        onloadCards();
-    } 
-
-})
-
-// Funcion constructura de libros
-function Book(id, title, author, pages, read) {  
-    this.id = id;
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.info = function() {
-        return this.title + " by " + this.author + ", " + this.pages + ", " + this.read;
-    }
-}
-
-// Funcion que agrega los libros de tipo object en arreglo que almacena todos los libros
-function addBookToLibrary(book) {
-    myLibrary.push(book);
-}
-
-
-addBookToLibrary(new Book(1, "El alquimista", "Paulo Coelho", 192, true));
-addBookToLibrary(new Book(2, "El hombre que calculaba", "Malba Tahan", 288, true));
-addBookToLibrary(new Book(3, "Piense y hagase rico", "Napoleon Hill", 320, false));
-addBookToLibrary(new Book(4, "Metafisica 4 en 1", "Conny Mendez", 314, true));
-
-
-function onloadCards() {
-    
-    myLibrary.map(el => {
-        $container.innerHTML += `
-        <div class="card">
-            <h3 class="card-title">${el.title}</h3>
-            <div class="card-content">
-                <p class="card-author">Autor: ${el.author}</p> 
-                <p class="card-pages">${el.pages} paginas</p>
-                <div class="card-read">
-                    <span>Leído:</span>
-                    ${el.read ? `<img src="images/leido.png" alt="leido" />` : `<img src="images/noLeido.png" alt="noLeido" />`}
+    renderBooks() {
+        this.$container.innerHTML = "";
+        this.myLibrary.forEach(book => {
+            this.$container.innerHTML += `
+            <div class="card">
+                <h3 class="card-title">${book.title}</h3>
+                <div class="card-content">
+                    <p class="card-author">Autor: ${book.author}</p> 
+                    <p class="card-pages">${book.pages} paginas</p>
+                    <div class="card-read">
+                        <span>Leído:</span>
+                        ${book.read ? `<img src="images/leido.png" alt="leido" />` : `<img src="images/noLeido.png" alt="noLeido" />`}
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button id="change${book.id}" class="change">Cambiar</button>
+                    <button id="del${book.id}" class="delete">Eliminar</button>
                 </div>
             </div>
-            <div class="buttons">
-                <button id="change${el.id}" class="change">Cambiar</button>
-                <button id="del${el.id}" class="delete">Eliminar</button>
-            </div>
-        </div>
-        `;
-    })
-    
-}
-onloadCards(); 
+            `;
+        });
+    }
 
+    handleDelete(targetId) {
+        const id = this.extractIdFromTarget(targetId);
+        this.myLibrary = this.myLibrary.filter(book => book.id !== id);
+        this.renderBooks();
+    }
 
-function deleteCard(id) {
-    let filter = myLibrary.filter(e => e.id !== id);
-    myLibrary = filter;
-}
-
-
-function changeCard(id) {
-
-    for (const elem of myLibrary) {
-        if (elem.id === id) {
-         elem.read ? elem.read = false : elem.read = true;
+    handleChange(targetId) {
+        const id = this.extractIdFromTarget(targetId);
+        const book = this.myLibrary.find(book => book.id === id);
+        if (book) {
+            book.read = !book.read;
+            this.renderBooks();
         }
+    }
+
+    extractIdFromTarget(targetId) {
+        const regex = /[^0-9]/g; // Expresión regular para eliminar letras
+        const txtFilter = targetId.replace(regex, "");
+        return parseInt(txtFilter);
     }
 }
 
-
-
-
+// Inicializa la biblioteca
+const library = new Library();
